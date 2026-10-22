@@ -2,10 +2,16 @@
 // ThemeToggle.astro
 ---
 
-<div class="tooltip-container">
-  <button id="theme-toggle-btn" class="navbar-button" aria-label="Toggle Theme" title="Toggle Theme">
+<div class="tooltip-container theme-toggle-wrapper">
+  <button
+    id="theme-toggle-btn"
+    class="navbar-button theme-toggle-btn"
+    aria-label="Toggle Theme"
+    title="Toggle Theme"
+    type="button"
+  >
     <!-- Sun Icon (shown in dark mode) -->
-    <svg id="sun-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+    <svg class="theme-sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="5"></circle>
       <line x1="12" y1="1" x2="12" y2="3"></line>
       <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -17,52 +23,81 @@
       <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
     </svg>
     <!-- Moon Icon (shown in light mode) -->
-    <svg id="moon-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <svg class="theme-moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
     </svg>
   </button>
   <div class="tooltip">Theme</div>
 </div>
 
-<script is:inline>
-  function setupThemeToggle() {
-    const btn = document.getElementById('theme-toggle-btn');
-    const sunSvg = document.getElementById('sun-svg');
-    const moonSvg = document.getElementById('moon-svg');
+<style>
+  .theme-toggle-wrapper {
+    display: inline-flex;
+    align-items: center;
+  }
 
-    function syncIcons(isDark) {
-      if (sunSvg && moonSvg) {
-        sunSvg.style.display = isDark ? 'inline-block' : 'none';
-        moonSvg.style.display = isDark ? 'none' : 'inline-block';
-      }
-    }
-
-    const currentIsDark = document.documentElement.classList.contains('is-dark') || 
-      (!document.documentElement.classList.contains('is-light') && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    
-    syncIcons(currentIsDark);
-
-    if (btn) {
-      btn.addEventListener('click', () => {
-        const isDarkNow = document.documentElement.classList.contains('is-dark');
-        const nextTheme = isDarkNow ? 'light' : 'dark';
-        
-        if (nextTheme === 'dark') {
-          document.documentElement.classList.add('is-dark');
-          document.documentElement.classList.remove('is-light');
-          document.documentElement.style.setProperty('color-scheme', 'dark');
-        } else {
-          document.documentElement.classList.add('is-light');
-          document.documentElement.classList.remove('is-dark');
-          document.documentElement.style.setProperty('color-scheme', 'light');
-        }
-
-        localStorage.setItem('theme', nextTheme);
-        syncIcons(nextTheme === 'dark');
-      });
+  /* Strictly mobile-only: hide on desktop viewports */
+  @media screen and (min-width: 1020px) {
+    .theme-toggle-wrapper {
+      display: none !important;
     }
   }
 
-  setupThemeToggle();
-  document.addEventListener('astro:after-swap', setupThemeToggle);
+  .theme-toggle-btn {
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .theme-toggle-btn svg {
+    pointer-events: none;
+  }
+
+  /* In dark mode: show Sun, hide Moon */
+  :global(html.is-dark) .theme-sun-icon {
+    display: inline-block !important;
+  }
+  :global(html.is-dark) .theme-moon-icon {
+    display: none !important;
+  }
+
+  /* In light mode: show Moon, hide Sun */
+  :global(html.is-light) .theme-sun-icon {
+    display: none !important;
+  }
+  :global(html.is-light) .theme-moon-icon {
+    display: inline-block !important;
+  }
+</style>
+
+<script is:inline>
+  (function() {
+    function toggleSiteTheme() {
+      const isDark = document.documentElement.classList.contains('is-dark');
+      const nextTheme = isDark ? 'light' : 'dark';
+
+      if (nextTheme === 'dark') {
+        document.documentElement.classList.add('is-dark');
+        document.documentElement.classList.remove('is-light');
+        document.documentElement.style.setProperty('color-scheme', 'dark');
+      } else {
+        document.documentElement.classList.add('is-light');
+        document.documentElement.classList.remove('is-dark');
+        document.documentElement.style.setProperty('color-scheme', 'light');
+      }
+
+      localStorage.setItem('theme', nextTheme);
+    }
+
+    if (!window.__themeToggleListenerAttached) {
+      window.__themeToggleListenerAttached = true;
+      document.addEventListener('click', function(e) {
+        const btn = e.target && e.target.closest && e.target.closest('#theme-toggle-btn');
+        if (btn) {
+          e.preventDefault();
+          e.stopPropagation();
+          toggleSiteTheme();
+        }
+      });
+    }
+  })();
 </script>

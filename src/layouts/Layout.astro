@@ -33,8 +33,8 @@ const pageTitle = title === "KaiNotch" ? "KaiNotch — Personal Website & Digita
     <!-- Inline Theme Initializer (prevents flash) -->
     <script is:inline>
       const savedTheme = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const isDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+      // Default to dark mode for KaiNotch unless light is explicitly saved
+      const isDark = savedTheme ? savedTheme === 'dark' : true;
       
       if (isDark) {
         document.documentElement.classList.add('is-dark');
@@ -70,11 +70,26 @@ const pageTitle = title === "KaiNotch" ? "KaiNotch — Personal Website & Digita
 </html>
 
 <style is:global>
-  html, body {
+  /* Dark mode background */
+  html.is-dark,
+  html.is-dark body {
     background: #0a0a0f !important;
+    color: var(--color-text);
   }
 
-  /* Keep layout and main content area transparent so the interactive ASCII matrix canvas shows through */
+  /* Light mode background */
+  html.is-light,
+  html.is-light body {
+    background: #f8f4e6 !important;
+    color: var(--color-text);
+  }
+
+  /* In light mode, hide the dark ASCII matrix background canvas */
+  html.is-light .ascii-canvas-container {
+    display: none !important;
+  }
+
+  /* Keep layout and main content area transparent so the background shows through */
   #layout.layout,
   .main-wrapper,
   .main-container,
@@ -97,10 +112,20 @@ const pageTitle = title === "KaiNotch" ? "KaiNotch — Personal Website & Digita
     display: none !important;
   }
 
-  .navbar {
+  html.is-dark .navbar {
     background: #0d0e12 !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
     z-index: 20;
+  }
+
+  html.is-light .navbar {
+    background: #f1ead5 !important;
+    border-bottom: 1px solid var(--color-border) !important;
+    z-index: 20;
+  }
+
+  html.is-light .navbar-menu.nav-items.active {
+    background: #f1ead5 !important;
   }
 
   @media screen and (min-width: 1020px) {

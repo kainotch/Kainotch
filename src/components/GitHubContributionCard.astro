@@ -361,6 +361,14 @@ const colorMap = {
     height: 10px;
     border-radius: 2px;
   }
+
+  :global(html.is-light) .heatmap-cell[data-count="0"] {
+    fill: #ebedf0 !important;
+  }
+
+  :global(html.is-light) .legend-cells span:first-child {
+    background-color: #ebedf0 !important;
+  }
 </style>
 
 <script is:inline>
