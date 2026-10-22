@@ -211,7 +211,7 @@ const pathname = Astro.url.pathname;
     position: relative;
     width: 100%;
     overflow: hidden;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: none !important;
   }
 
   .sidebar-bg-video-container {
@@ -240,12 +240,13 @@ const pathname = Astro.url.pathname;
     inset: 0;
     width: 100% !important;
     height: 100% !important;
-    /* Dark translucent overlay so manga video animation is clearly visible while text & links are super sharp */
+    /* Dark translucent overlay that fades smoothly into the sidebar bottom background with zero harsh lines */
     background: linear-gradient(
       180deg,
       rgba(10, 11, 16, 0.70) 0%,
-      rgba(10, 11, 16, 0.60) 65%,
-      rgba(10, 11, 16, 0.92) 100%
+      rgba(10, 11, 16, 0.60) 60%,
+      rgba(13, 14, 18, 0.95) 88%,
+      #0d0e12 100%
     );
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
