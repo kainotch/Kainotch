@@ -1,0 +1,94 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const formattedDate = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+}).format(post.data.pubDate);
+---
+
+<Layout title={post.data.title} description={post.data.description} pageType="post">
+  <div style="margin-bottom: 2rem;">
+    <a href="/blog" class="button secondary small">&larr; Back to all posts</a>
+  </div>
+
+  <header class="hero hero-post">
+    <div class="sub-title">
+      <a href="/blog">Blog</a> <span>/</span>
+      <span>{post.data.title}</span>
+    </div>
+    
+    <h1 class="has-date">{post.data.title}</h1>
+    
+    <div class="post-date">
+      <time datetime={post.data.pubDate.toISOString()}>{formattedDate}</time>
+    </div>
+
+    {post.data.tags.length > 0 && (
+      <div class="tags" style="display: flex; gap: 0.4rem; margin-top: 1rem; flex-wrap: wrap;">
+        {post.data.tags.map((tag) => (
+          <span class="tag">{tag}</span>
+        ))}
+      </div>
+    )}
+  </header>
+
+  <article class="post-content" style="line-height: 1.8; margin-top: 2rem;">
+    <Content />
+  </article>
+
+  <hr style="margin: 3.5rem 0 2rem 0;" />
+
+  <div class="flex-space-between">
+    <a href="/blog" class="button secondary">&larr; All Posts</a>
+    <a href="#top" class="button secondary">Back to Top &uarr;</a>
+  </div>
+</Layout>
+
+<script is:inline>
+  function setupCodeCopy() {
+    const codeBlocks = document.querySelectorAll('pre');
+    codeBlocks.forEach((block) => {
+      if (block.querySelector('.copy-btn')) return;
+
+      const btn = document.createElement('button');
+      btn.className = 'button secondary x-small copy-btn';
+      btn.innerText = 'Copy';
+      btn.style.position = 'absolute';
+      btn.style.top = '0.6rem';
+      btn.style.right = '0.6rem';
+
+      btn.addEventListener('click', async () => {
+        const code = block.querySelector('code')?.innerText || block.innerText;
+        try {
+          await navigator.clipboard.writeText(code);
+          btn.innerText = 'Copied!';
+          setTimeout(() => {
+            btn.innerText = 'Copy';
+          }, 2000);
+        } catch (e) {
+          btn.innerText = 'Failed';
+        }
+      });
+
+      block.style.position = 'relative';
+      block.appendChild(btn);
+    });
+  }
+
+  setupCodeCopy();
+  document.addEventListener('astro:after-swap', setupCodeCopy);
+</script>

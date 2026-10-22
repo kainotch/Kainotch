@@ -1,0 +1,445 @@
+---
+// GitHubContributionCard.astro
+let totalContributions = 635;
+let weeks: Array<Array<{ date: string; count: number; level: number }>> = [];
+const monthLabels: Array<{ name: string; weekIndex: number }> = [];
+
+try {
+  const res = await fetch('https://github-contributions-api.jogruber.de/v4/KaiNotch?y=last');
+  if (res.ok) {
+    const data = await res.json();
+    totalContributions = data.total?.lastYear || 635;
+    const rawContributions = data.contributions || [];
+
+    // Group into 53 weeks
+    let currentMonth = -1;
+    for (let i = 0; i < rawContributions.length; i += 7) {
+      const weekIndex = Math.floor(i / 7);
+      const week = rawContributions.slice(i, i + 7);
+      weeks.push(week);
+
+      // Check if a new month starts in this week
+      const firstDay = week[0];
+      if (firstDay) {
+        const month = new Date(firstDay.date).getMonth();
+        if (month !== currentMonth) {
+          currentMonth = month;
+          const monthName = new Date(firstDay.date).toLocaleString('en-US', { month: 'short' });
+          monthLabels.push({ name: monthName, weekIndex });
+        }
+      }
+    }
+  }
+} catch (e) {
+  console.error("Could not fetch GitHub contributions:", e);
+}
+
+// Fallback if network fails
+if (weeks.length === 0) {
+  for (let w = 0; w < 53; w++) {
+    const week = [];
+    for (let d = 0; d < 7; d++) {
+      week.push({ date: '2026', count: 0, level: 0 });
+    }
+    weeks.push(week);
+  }
+}
+
+const colorMap = {
+  0: '#1b1f24',
+  1: '#0e4429',
+  2: '#006d32',
+  3: '#26a641',
+  4: '#39d353'
+};
+---
+
+<div class="github-bento-card" id="github-bento-card">
+  <div class="card-glow" id="github-card-glow"></div>
+  
+  <div class="github-card-header">
+    <div class="github-identity">
+      <div class="github-icon-badge">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+      </div>
+      <div>
+        <div class="github-title">GitHub</div>
+        <div class="github-username">KaiNotch</div>
+      </div>
+    </div>
+
+    <a 
+      href="https://github.com/KaiNotch" 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      class="github-link-btn"
+      title="Open GitHub Profile"
+      aria-label="Open GitHub Profile"
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="7" y1="17" x2="17" y2="7"></line>
+        <polyline points="7 7 17 7 17 17"></polyline>
+      </svg>
+    </a>
+  </div>
+
+  <div class="github-graph-section">
+    <div class="contributions-count">
+      <span id="contributions-total-text">{totalContributions} contributions in the last year</span>
+    </div>
+
+    <div class="graph-svg-wrapper" id="github-graph-wrapper">
+      <svg viewBox="0 0 740 125" class="github-heatmap-svg">
+        <!-- Month labels -->
+        {monthLabels.map((m) => (
+          <text 
+            x={35 + m.weekIndex * 13} 
+            y="12" 
+            class="graph-label"
+          >
+            {m.name}
+          </text>
+        ))}
+
+        <!-- Day labels -->
+        <text x="5" y="42" class="graph-label">Mon</text>
+        <text x="5" y="68" class="graph-label">Wed</text>
+        <text x="5" y="94" class="graph-label">Fri</text>
+
+        <!-- Squares grid -->
+        <g transform="translate(35, 20)">
+          {weeks.map((week, wIndex) => (
+            <g transform={`translate(${wIndex * 13}, 0)`}>
+              {week.map((day, dIndex) => {
+                const fill = colorMap[day.level as keyof typeof colorMap] || colorMap[0];
+                return (
+                  <rect
+                    x="0"
+                    y={dIndex * 13}
+                    width="10"
+                    height="10"
+                    rx="2"
+                    ry="2"
+                    fill={fill}
+                    class="heatmap-cell"
+                    data-date={day.date}
+                    data-count={day.count}
+                  >
+                    <title>{`${day.count} contributions on ${day.date}`}</title>
+                  </rect>
+                );
+              })}
+            </g>
+          ))}
+        </g>
+      </svg>
+    </div>
+    <script is:inline>
+      (function() {
+        var el = document.getElementById('github-graph-wrapper');
+        if (el) {
+          el.scrollLeft = el.scrollWidth;
+        }
+      })();
+    </script>
+
+    <div class="graph-footer">
+      <a 
+        href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/managing-contribution-settings-on-your-profile" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        class="count-info-link"
+      >
+        Learn how we count contributions
+      </a>
+
+      <div class="legend">
+        <span>Less</span>
+        <div class="legend-cells">
+          <span style="background-color: #1b1f24;"></span>
+          <span style="background-color: #0e4429;"></span>
+          <span style="background-color: #006d32;"></span>
+          <span style="background-color: #26a641;"></span>
+          <span style="background-color: #39d353;"></span>
+        </div>
+        <span>More</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .github-bento-card {
+    position: relative;
+    background: var(--color-background-card);
+    border: 1px solid var(--color-border-card);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+    overflow: hidden;
+    transition: transform var(--transition), border-color var(--transition);
+  }
+
+  .github-bento-card:hover {
+    border-color: var(--color-primary);
+  }
+
+  .card-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: radial-gradient(circle at 50% 50%, rgba(57, 211, 83, 0.12), transparent 70%);
+  }
+
+  .github-bento-card:hover .card-glow {
+    opacity: 1;
+  }
+
+  .github-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+  }
+
+  .github-identity {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .github-icon-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: var(--color-background-input);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-emphasized);
+  }
+
+  .github-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-text-emphasized);
+    line-height: 1.2;
+  }
+
+  .github-username {
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+    font-family: var(--font-family-monospace2);
+  }
+
+  .github-link-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: var(--color-background-input);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    transition: color var(--transition), border-color var(--transition), background var(--transition);
+  }
+
+  .github-link-btn:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    background: var(--color-background-input-hover);
+  }
+
+  .github-graph-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .contributions-count {
+    font-family: var(--font-family-monospace2);
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-text-emphasized);
+  }
+
+  .graph-svg-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+  }
+
+  .graph-svg-wrapper::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .graph-svg-wrapper::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 999px;
+  }
+
+  .graph-svg-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
+  }
+
+  .graph-svg-wrapper::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary);
+  }
+
+  .github-heatmap-svg {
+    display: block;
+    width: 100%;
+    min-width: 680px;
+    height: auto;
+  }
+
+  .graph-label {
+    font-size: 10px;
+    fill: var(--color-text-muted);
+    font-family: var(--font-family-monospace2);
+  }
+
+  .heatmap-cell {
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    cursor: pointer;
+  }
+
+  .heatmap-cell:hover {
+    stroke: #ffffff;
+    stroke-width: 1px;
+    opacity: 0.85;
+  }
+
+  .graph-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    font-family: var(--font-family-monospace2);
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .count-info-link {
+    color: var(--color-text-muted);
+    text-decoration: none;
+  }
+
+  .count-info-link:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+
+  .legend {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .legend-cells {
+    display: flex;
+    gap: 3px;
+  }
+
+  .legend-cells span {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+  }
+</style>
+
+<script is:inline>
+  function scrollToLatestContributions() {
+    const wrapper = document.getElementById('github-graph-wrapper');
+    if (!wrapper) return;
+    wrapper.scrollLeft = wrapper.scrollWidth;
+  }
+
+  // Guarantee that the latest recent activity (right side) is in view on load across all devices
+  scrollToLatestContributions();
+  requestAnimationFrame(scrollToLatestContributions);
+  setTimeout(scrollToLatestContributions, 30);
+  setTimeout(scrollToLatestContributions, 100);
+  setTimeout(scrollToLatestContributions, 250);
+  setTimeout(scrollToLatestContributions, 500);
+
+  window.addEventListener('load', scrollToLatestContributions);
+  document.addEventListener('DOMContentLoaded', scrollToLatestContributions);
+  document.addEventListener('astro:page-load', scrollToLatestContributions);
+  document.addEventListener('astro:after-swap', () => {
+    scrollToLatestContributions();
+    setTimeout(scrollToLatestContributions, 50);
+  });
+  window.addEventListener('orientationchange', () => {
+    setTimeout(scrollToLatestContributions, 80);
+  });
+
+  function setupGitHubGlow() {
+    const card = document.getElementById('github-bento-card');
+    const glow = document.getElementById('github-card-glow');
+    if (!card || !glow) return;
+
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      glow.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(57, 211, 83, 0.18), transparent 60%)`;
+    });
+  }
+
+  setupGitHubGlow();
+  document.addEventListener('astro:after-swap', setupGitHubGlow);
+
+  async function refreshContributionsLive() {
+    try {
+      const res = await fetch('https://github-contributions-api.jogruber.de/v4/KaiNotch?y=last');
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data && data.total && typeof data.total.lastYear === 'number') {
+        const totalText = document.getElementById('contributions-total-text');
+        if (totalText) {
+          totalText.textContent = `${data.total.lastYear} contributions in the last year`;
+        }
+      }
+      const raw = data.contributions || [];
+      const colorMap = {
+        0: '#1b1f24',
+        1: '#0e4429',
+        2: '#006d32',
+        3: '#26a641',
+        4: '#39d353'
+      };
+      // Live-update the recent 21 days squares
+      raw.slice(-21).forEach((day) => {
+        const cell = document.querySelector(`.heatmap-cell[data-date="${day.date}"]`);
+        if (cell) {
+          const fill = colorMap[day.level] || colorMap[0];
+          cell.setAttribute('fill', fill);
+          cell.setAttribute('data-count', String(day.count));
+          const title = cell.querySelector('title');
+          if (title) title.textContent = `${day.count} contributions on ${day.date}`;
+        }
+      });
+    } catch (e) {
+      // Keep pre-rendered build count
+    }
+  }
+
+  refreshContributionsLive();
+  document.addEventListener('astro:after-swap', refreshContributionsLive);
+</script>

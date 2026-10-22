@@ -1,0 +1,76 @@
+---
+// ColorDropdown.astro
+---
+
+<div class="dropdown tooltip-container" id="color-dropdown-wrapper">
+  <button id="color-dropdown-btn" class="navbar-button" aria-label="Theme Color" title="Theme Color">
+    <div class="circle" id="current-color-dot" style="background-color: var(--theme-blue);"></div>
+  </button>
+  <div id="color-dropdown-menu" class="dropdown-results" style="display: none;">
+    <div class="circles">
+      <div class="dropdown-option" data-color="var(--theme-blue)" title="Blue">
+        <div class="circle" style="background-color: var(--theme-blue);"></div>
+      </div>
+      <div class="dropdown-option" data-color="var(--theme-pink)" title="Pink">
+        <div class="circle" style="background-color: var(--theme-pink);"></div>
+      </div>
+      <div class="dropdown-option" data-color="var(--theme-lavender)" title="Lavender">
+        <div class="circle" style="background-color: var(--theme-lavender);"></div>
+      </div>
+      <div class="dropdown-option" data-color="var(--theme-green)" title="Green">
+        <div class="circle" style="background-color: var(--theme-green);"></div>
+      </div>
+      <div class="dropdown-option" data-color="var(--theme-yellow)" title="Yellow">
+        <div class="circle" style="background-color: var(--theme-yellow);"></div>
+      </div>
+    </div>
+  </div>
+  <div class="tooltip">Color</div>
+</div>
+
+<script is:inline>
+  function setupColorDropdown() {
+    const btn = document.getElementById('color-dropdown-btn');
+    const menu = document.getElementById('color-dropdown-menu');
+    const dot = document.getElementById('current-color-dot');
+    const wrapper = document.getElementById('color-dropdown-wrapper');
+
+    if (!btn || !menu || !dot) return;
+
+    // Load saved color or default to blue
+    const savedColor = localStorage.getItem('theme-color') || 'var(--theme-blue)';
+    document.documentElement.style.setProperty('--color-primary', savedColor);
+    dot.style.backgroundColor = savedColor;
+
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = menu.style.display === 'block';
+      menu.style.display = isOpen ? 'none' : 'block';
+      btn.classList.toggle('active', !isOpen);
+    });
+
+    document.querySelectorAll('#color-dropdown-menu .dropdown-option').forEach((opt) => {
+      opt.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const color = opt.getAttribute('data-color');
+        if (color) {
+          localStorage.setItem('theme-color', color);
+          document.documentElement.style.setProperty('--color-primary', color);
+          dot.style.backgroundColor = color;
+          menu.style.display = 'none';
+          btn.classList.remove('active');
+        }
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (wrapper && !wrapper.contains(e.target)) {
+        menu.style.display = 'none';
+        btn.classList.remove('active');
+      }
+    });
+  }
+
+  setupColorDropdown();
+  document.addEventListener('astro:after-swap', setupColorDropdown);
+</script>

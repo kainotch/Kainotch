@@ -1,0 +1,92 @@
+---
+import ColorDropdown from './ColorDropdown.astro';
+import ThemeToggle from './ThemeToggle.astro';
+
+const pathname = Astro.url.pathname;
+---
+
+<header class="navbar">
+  <div class="navbar-title">
+    <div class="navbar-title-content">
+      <a href="/" class="navbar-title-link">
+        <span>
+          <img
+            src="/avatar.png"
+            class="navbar-logo"
+            style="border-radius: 50%; object-fit: cover; border: 1.5px solid var(--color-primary);"
+            alt="kainotch"
+            height="20"
+            width="20"
+          />
+        </span>
+        <span class="site-name">kainotch</span>
+      </a>
+    </div>
+  </div>
+  <div class="navbar-container">
+    <section class="navbar-section">
+      <button
+        id="mobile-menu-btn"
+        class="navbar-button nav-menu-button"
+        aria-label="Toggle navigation"
+      >
+        <svg id="menu-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <svg id="close-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <nav id="mobile-nav-items" class="navbar-menu nav-items">
+        <a href="/blog" class={pathname.startsWith('/blog') ? 'active' : ''}>
+          <img src="/assets/nav-blog.png" alt="" />
+          Blog
+        </a>
+        <a href="/shelves" class={pathname.startsWith('/shelves') ? 'active' : ''}>
+          <img src="/assets/nav-search.png" alt="" />
+          Shelves
+        </a>
+        <a href="/projects" class={pathname.startsWith('/projects') ? 'active' : ''}>
+          <img src="/assets/nav-projects.png" alt="" />
+          Projects
+        </a>
+        <a href="/about" class={pathname.startsWith('/about') ? 'active' : ''}>
+          <img src="/assets/nav-floppy.png" alt="" />
+          About me
+        </a>
+      </nav>
+
+      <nav class="navbar-menu social">
+        <ThemeToggle />
+        <ColorDropdown />
+      </nav>
+    </section>
+  </div>
+</header>
+
+<script is:inline>
+  function setupMobileNav() {
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-nav-items');
+    const menuIcon = document.getElementById('menu-icon');
+    const closeIcon = document.getElementById('close-icon');
+
+    if (!btn || !menu) return;
+
+    btn.addEventListener('click', () => {
+      const isOpen = menu.classList.toggle('active');
+      btn.classList.toggle('active', isOpen);
+      if (menuIcon && closeIcon) {
+        menuIcon.style.display = isOpen ? 'none' : 'inline-block';
+        closeIcon.style.display = isOpen ? 'inline-block' : 'none';
+      }
+    });
+  }
+
+  setupMobileNav();
+  document.addEventListener('astro:after-swap', setupMobileNav);
+</script>

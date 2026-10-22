@@ -1,0 +1,66 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const shelves = [
+  {
+    title: 'Android & Mobile Development',
+    description: 'Resources, libraries, and guides I found helpful when building Wammy and Neru.',
+    links: [
+      { title: 'Kotlin Coroutines & Asynchronous Work', url: '/blog/building-wammy-android-reader' },
+      { title: 'Room Database & Local Caching', url: '/blog/building-wammy-android-reader' },
+      { title: 'Architecture Patterns for Mobile', url: '/blog/introducing-nero' },
+    ]
+  },
+  {
+    title: 'Web Dev & Digital Gardens',
+    description: 'Tools and approaches for building lightning fast, minimalist static sites without bloat.',
+    links: [
+      { title: 'Why I Picked Up Multiple Languages', url: '/blog/why-i-learned-random-languages' },
+      { title: 'Minimalist CSS Custom Properties & New Moon', url: '/projects#kainotch' },
+      { title: 'Tania Rascia Design Philosophy', url: 'https://www.taniarascia.com' },
+    ]
+  },
+  {
+    title: 'Tools & Utilities',
+    description: 'Recommended software, terminal configs, and workflow essentials.',
+    links: [
+      { title: 'Visual Studio Code + New Moon Theme', url: 'https://taniarascia.github.io/new-moon/' },
+      { title: 'Git & GitHub Workflows', url: 'https://github.com/KaiNotch' },
+      { title: 'Android Studio Setup & Gradle Tricks', url: '/projects#wammy' },
+    ]
+  }
+];
+---
+
+<Layout title="Shelves" description="Curated collections and learning paths by KaiNotch.">
+  <header class="hero hero-page" style="margin-bottom: 2rem;">
+    <h1 class="flex-align-center large-gap">
+      <img src="/assets/nav-search.png" alt="" width="32" height="32" />
+      Shelves
+    </h1>
+    <div class="hero-description">
+      Hand-picked paths, curated resources, and organized guides on development, tools, and apps.
+    </div>
+  </header>
+
+  <div class="cards cards-half">
+    {shelves.map((shelf) => (
+      <div class="card card-highlight card-shelf">
+        <div class="flex-space-between">
+          <div class="card-title">{shelf.title}</div>
+          <div class="chip">
+            <span class="chip-highlight">{shelf.links.length} items</span>
+          </div>
+        </div>
+        <p style="margin-bottom: 1rem;">{shelf.description}</p>
+        <ul style="padding-left: 1.25rem; margin-bottom: 0;">
+          {shelf.links.map((link) => (
+            <li style="margin-bottom: 0.4rem;">
+              <a href={link.url}>{link.title}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+</Layout>

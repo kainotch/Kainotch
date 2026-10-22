@@ -1,0 +1,296 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="About Me" description="About KaiNotch, developer background, tools, current activities, and setup.">
+  <header class="hero hero-page" style="margin-bottom: 2rem;">
+    <h1 class="flex-align-center large-gap">
+      <img src="/assets/nav-floppy.png" alt="" width="32" height="32" />
+      About Me
+    </h1>
+    <div class="hero-description">
+      Software developer, Android creator, and all-around tech nerd.
+    </div>
+  </header>
+
+  <article class="page-article about-article">
+    <section class="about-section">
+      <h2>Hey, I'm KaiNotch.</h2>
+      <p>
+        Welcome to my spot on the web for code, projects, and learning in public. I'm an independent software developer passionate about building useful Android applications, fast minimal web experiences, and open-source tools.
+      </p>
+      <p>
+        When away from the keyboard, I enjoy playing sports, watching anime and movies, reading interesting manga and novels, and gaming with friends.
+      </p>
+
+      <div class="philosophy-callout">
+        <p style="margin: 0;">
+          This digital garden is a personal space for self-expression and sharing what I've learned with the world. True to the indie web, it has <strong>no ads, no affiliate links, no tracking or analytics, no sponsored posts, and no paywalls</strong>.
+        </p>
+      </div>
+
+      <p>
+        If you'd like to follow my journey, check out my <a href="/projects">Projects</a>, explore my <a href="/blog">Blog</a>, or subscribe to the <a href="/rss.xml">RSS feed</a>.
+      </p>
+    </section>
+
+    <hr class="about-divider" />
+
+    <!-- Contact Section -->
+    <section class="about-section">
+      <h2>Contact</h2>
+      <p>
+        Feel free to reach out to say hi, collaborate, or connect on socials:
+      </p>
+      <ul class="styled-list contact-list">
+        <li>
+          <strong>Email:</strong> <a href="mailto:kainotch@gmail.com">kainotch@gmail.com</a> &mdash; Direct email for questions, collaborations, or saying hi.
+        </li>
+        <li>
+          <strong>GitHub:</strong> <a href="https://github.com/KaiNotch" target="_blank" rel="noopener noreferrer">@KaiNotch</a> &mdash; Where all my open-source code, app repositories, and contributions live.
+        </li>
+        <li>
+          <strong>Instagram:</strong> <a href="https://instagram.com/kainotch" target="_blank" rel="noopener noreferrer">@kainotch</a> &mdash; Personal updates and casual side projects.
+        </li>
+        <li>
+          <strong>RSS Feed:</strong> <a href="/rss.xml">rss.xml</a> &mdash; Subscribe via your favorite RSS reader for new articles and releases.
+        </li>
+      </ul>
+    </section>
+
+    <hr class="about-divider" />
+
+    <!-- What I'm Doing Now (Now page section inspired by Derek Sivers & Tania Rascia) -->
+    <section class="about-section">
+      <div class="section-header-with-badge">
+        <h2>What I'm Doing Now</h2>
+        <span class="now-badge">Updated October 2026</span>
+      </div>
+      <ul class="styled-list">
+        <li>
+          <strong>Playing Sports:</strong> Staying active outdoors and playing sports whenever I need a break from code and screens.
+        </li>
+        <li>
+          <strong>Watching Anime &amp; Movies:</strong> Enjoying compelling anime series, animated features, and favorite films.
+        </li>
+        <li>
+          <strong>Reading Manga &amp; Novels:</strong> Catching up on interesting manga, manhwa webtoons, and light novels (which originally inspired me to create <a href="/projects#wammy">Wammy</a>).
+        </li>
+        <li>
+          <strong>Gaming:</strong> Playing multiplayer games and exploring immersive PC titles during downtime.
+        </li>
+        <li>
+          <strong>Android Tinkering &amp; App Dev:</strong> Experimenting with Kotlin coroutines and Jetpack Compose, while maintaining and improving <a href="/projects#wammy">Wammy</a> and <a href="/projects#neru">Neru</a>.
+        </li>
+        <li>
+          <strong>Digital Garden:</strong> Continuously writing notes, sharing tutorials, and refining this website.
+        </li>
+      </ul>
+    </section>
+
+    <hr class="about-divider" />
+
+    <!-- Tools / Software Setup Section -->
+    <section class="about-section">
+      <h2>Tools &amp; Setup</h2>
+      <p>
+        A curated look at the software, environment, and tools I use for everyday coding and development:
+      </p>
+
+      <h3>Software &amp; Environment</h3>
+      <ul class="styled-list tools-list">
+        <li>
+          <strong>Primary IDE:</strong> <a href="https://developer.android.com/studio" target="_blank" rel="noopener noreferrer">Android Studio</a> &mdash; For native Android app architecture, Compose previews, and Gradle builds.
+        </li>
+        <li>
+          <strong>Code Editor:</strong> <a href="https://code.visualstudio.com/" target="_blank" rel="noopener noreferrer">Visual Studio Code</a> &mdash; For web engineering, Astro, TypeScript, and quick scripts.
+        </li>
+        <li>
+          <strong>Syntax Theme:</strong> <a href="https://taniarascia.github.io/new-moon/" target="_blank" rel="noopener noreferrer">New Moon Theme</a> &mdash; Clean, optimized dark syntax theme created by Tania Rascia.
+        </li>
+        <li>
+          <strong>Terminal &amp; Shell:</strong> Windows Terminal with PowerShell and Git Bash.
+        </li>
+        <li>
+          <strong>Version Control:</strong> <a href="https://git-scm.com/" target="_blank" rel="noopener noreferrer">Git</a> paired with <a href="https://github.com/KaiNotch" target="_blank" rel="noopener noreferrer">GitHub</a>.
+        </li>
+        <li>
+          <strong>Notes &amp; Garden:</strong> Local-first Markdown files with Git revisioning.
+        </li>
+      </ul>
+
+      <h3>Languages &amp; Technologies</h3>
+      <div class="tech-tags-grid">
+        <span class="tag">Kotlin</span>
+        <span class="tag">Android Jetpack</span>
+        <span class="tag">Jetpack Compose</span>
+        <span class="tag">Astro</span>
+        <span class="tag">TypeScript</span>
+        <span class="tag">JavaScript</span>
+        <span class="tag">HTML &amp; CSS</span>
+        <span class="tag">Python</span>
+        <span class="tag">Git</span>
+      </div>
+    </section>
+
+    <hr class="about-divider" />
+
+    <!-- Favorites & Interests Section -->
+    <section class="about-section">
+      <h2>Favorites &amp; Interests</h2>
+      <p>
+        A snapshot of things I enjoy when stepping away from development:
+      </p>
+      <ul class="styled-list">
+        <li>
+          <strong>Sports &amp; Fitness:</strong> Playing sports, getting outdoors, and staying energized.
+        </li>
+        <li>
+          <strong>Anime, Manga &amp; Light Novels:</strong> Longtime fan of manga and webtoons across sci-fi, psychological, and fantasy genres. Building <a href="/projects#wammy">Wammy</a> came directly from wanting the cleanest, fastest reader experience on Android.
+        </li>
+        <li>
+          <strong>Movies &amp; Cinema:</strong> Watching great animated films, sci-fi movies, and thought-provoking series.
+        </li>
+        <li>
+          <strong>Gaming:</strong> Enjoying immersive single-player campaigns and competitive multiplayer sessions with friends.
+        </li>
+        <li>
+          <strong>Tech Tinkering:</strong> Custom Android ROMs, kernel tweaks, system optimization, and exploring random programming languages just for the fun of learning.
+        </li>
+      </ul>
+    </section>
+
+    <hr class="about-divider" />
+
+    <!-- Colophon / About This Site Section (like Tania's site) -->
+    <section class="about-section">
+      <h2>Colophon</h2>
+      <p>
+        Details about how this website is designed and maintained:
+      </p>
+      <ul class="styled-list">
+        <li>
+          Built with <a href="https://astro.build" target="_blank" rel="noopener noreferrer">Astro</a>, delivering fast static HTML with zero client-side framework bloat.
+        </li>
+        <li>
+          Typography set in <em>Outfit Variable</em> for headings and body, and <em>Google Sans Code Variable</em> for monospace snippets and data tags.
+        </li>
+        <li>
+          Hosted and deployed automatically with Vercel. The complete source code is open source on <a href="https://github.com/KaiNotch/Kainotch" target="_blank" rel="noopener noreferrer">GitHub</a>.
+        </li>
+      </ul>
+    </section>
+  </article>
+</Layout>
+
+<style>
+  .about-article {
+    line-height: 1.8;
+    max-width: 780px;
+  }
+
+  .about-section {
+    margin-bottom: 2rem;
+  }
+
+  .about-section h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--color-text-emphasized);
+    margin-top: 0;
+    margin-bottom: 1rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .about-section h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--color-text-emphasized);
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .about-divider {
+    border: none;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 2.5rem 0;
+  }
+
+  .section-header-with-badge {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 0.35rem;
+    margin-bottom: 1rem;
+  }
+
+  .section-header-with-badge h2 {
+    margin: 0;
+    padding: 0;
+    border-bottom: none;
+  }
+
+  .now-badge {
+    font-family: var(--font-family-monospace2);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    color: var(--color-primary);
+  }
+
+  .philosophy-callout {
+    background: rgba(18, 19, 26, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-left: 4px solid var(--color-primary);
+    border-radius: var(--border-radius);
+    padding: 1rem 1.35rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .styled-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 1rem 0;
+  }
+
+  .styled-list li {
+    position: relative;
+    padding-left: 1.6rem;
+    margin-bottom: 0.85rem;
+    line-height: 1.7;
+  }
+
+  .styled-list li::before {
+    content: "▹";
+    position: absolute;
+    left: 0.2rem;
+    top: 0;
+    color: var(--color-primary);
+    font-weight: bold;
+    font-size: 1rem;
+  }
+
+  .tech-tags-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  @media screen and (max-width: 600px) {
+    .section-header-with-badge {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.4rem;
+    }
+  }
+</style>

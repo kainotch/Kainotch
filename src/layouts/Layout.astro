@@ -1,0 +1,188 @@
+---
+import Sidebar from '../components/Sidebar.astro';
+import Navigation from '../components/Navigation.astro';
+import Footer from '../components/Footer.astro';
+import AsciiMatrixBackground from '../components/AsciiMatrixBackground.astro';
+import '../styles/style.css';
+import '../styles/new-moon.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  pageType?: 'page' | 'post';
+}
+
+const {
+  title = "KaiNotch",
+  description = "I'm KaiNotch, software developer and creator. This is my digital garden.",
+  pageType = 'page'
+} = Astro.props;
+
+const pageTitle = title === "KaiNotch" ? "KaiNotch — Personal Website & Digital Garden" : `${title} | KaiNotch`;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/avatar.png" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    
+    <!-- Inline Theme Initializer (prevents flash) -->
+    <script is:inline>
+      const savedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+      
+      if (isDark) {
+        document.documentElement.classList.add('is-dark');
+        document.documentElement.classList.remove('is-light');
+        document.documentElement.style.setProperty('color-scheme', 'dark');
+      } else {
+        document.documentElement.classList.add('is-light');
+        document.documentElement.classList.remove('is-dark');
+        document.documentElement.style.setProperty('color-scheme', 'light');
+      }
+
+      const savedColor = localStorage.getItem('theme-color') || 'var(--theme-blue)';
+      document.documentElement.style.setProperty('--color-primary', savedColor);
+    </script>
+  </head>
+  <body>
+    <!-- Interactive ASCII Matrix Background on the Right Side (from quesz.vercel.app) -->
+    <AsciiMatrixBackground />
+
+    <div id="layout" class="layout">
+      <Navigation />
+      <Sidebar />
+      <div class="main-wrapper" id="main-wrapper">
+        <div class="main-container">
+          <main class={`main-content ${pageType}`}>
+            <slot />
+          </main>
+        </div>
+        <Footer />
+      </div>
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  html, body {
+    background: #0a0a0f !important;
+  }
+
+  /* Keep layout and main content area transparent so the interactive ASCII matrix canvas shows through */
+  #layout.layout,
+  .main-wrapper,
+  .main-container,
+  .main-content {
+    background: transparent !important;
+  }
+
+  /* Layout: Left Sidebar docked, Right Content area with ASCII background */
+  #layout.layout {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+  }
+
+  /* Hide sidebar by default on mobile / tablets (< 1020px) */
+  .sidebar {
+    display: none !important;
+  }
+
+  .navbar {
+    background: #0d0e12 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    z-index: 20;
+  }
+
+  @media screen and (min-width: 1020px) {
+    #layout.layout {
+      display: grid;
+      grid-template-columns: var(--sidebar-width) 1fr;
+    }
+
+    /* Sidebar on the left: hosts the video background */
+    .sidebar {
+      display: flex !important;
+      background: #0d0e12 !important;
+      border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      z-index: 10;
+      width: var(--sidebar-width) !important;
+      min-width: var(--sidebar-width) !important;
+      max-width: var(--sidebar-width) !important;
+    }
+
+    .navbar {
+      display: none !important;
+    }
+  }
+
+  /* Right content wrapper with exact tight spacing matching Tania's layout */
+  .main-wrapper {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    z-index: 1;
+  }
+
+  .main-container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  @media screen and (min-width: 1020px) {
+    .main-container {
+      padding-left: 6.5rem; /* ~104px gap from the divider line, exactly matching Tania! */
+      padding-right: 2.5rem;
+    }
+  }
+
+  .main-content {
+    width: 100%;
+    max-width: 900px !important;
+    margin-left: 0 !important;
+    margin-right: auto !important;
+    padding: var(--layout-padding-vertical) 0;
+  }
+
+  .footer {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    padding: 0 1.5rem;
+  }
+
+  @media screen and (min-width: 1020px) {
+    .footer {
+      padding-left: 6.5rem !important;
+      padding-right: 2.5rem !important;
+    }
+  }
+
+  .footer-section {
+    width: 100%;
+    max-width: 900px !important;
+    margin-left: 0 !important;
+    margin-right: auto !important;
+    padding: 1.5rem 0 !important;
+  }
+</style>

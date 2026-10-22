@@ -1,0 +1,120 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PostItem from '../../components/PostItem.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog');
+const sortedPosts = posts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+const allTags = Array.from(new Set(posts.flatMap((p) => p.data.tags || []))).sort();
+---
+
+<Layout title="Blog" description="Guides, tutorials, and notes on code, apps, and learning by KaiNotch.">
+  <header class="hero hero-page" style="margin-bottom: 1.5rem;">
+    <h1 class="flex-align-center large-gap">
+      <img src="/assets/nav-blog.png" alt="" width="32" height="32" />
+      Blog
+    </h1>
+    <div class="hero-description">
+      Guides, tutorials, and notes on Android, software development, and tech. <a href="/shelves">Browse the shelves</a>.
+    </div>
+  </header>
+
+  <div class="search-container" style="margin-bottom: 1.5rem;">
+    <input
+      type="text"
+      id="blog-search"
+      class="searchbar"
+      placeholder="Type to filter posts by title, tag, or description..."
+      style="width: 100%;"
+      aria-label="Filter posts"
+    />
+  </div>
+
+  <div class="tag-filters" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2rem;">
+    <button class="button small active filter-btn" data-tag="all">All ({sortedPosts.length})</button>
+    {allTags.map((tag) => (
+      <button class="button small secondary filter-btn" data-tag={tag}>#{tag}</button>
+    ))}
+  </div>
+
+  <div id="posts-list" class="posts">
+    {sortedPosts.map((post) => (
+      <div 
+        class="post-wrapper-item"
+        data-title={post.data.title.toLowerCase()}
+        data-desc={post.data.description.toLowerCase()}
+        data-tags={JSON.stringify(post.data.tags || [])}
+      >
+        <PostItem
+          title={post.data.title}
+          slug={post.id}
+          pubDate={post.data.pubDate}
+          tags={post.data.tags}
+          description={post.data.description}
+          icon="/assets/nav-blog.png"
+        />
+      </div>
+    ))}
+  </div>
+
+  <div id="no-results-msg" style="display: none; padding: 3rem 0; text-align: center; color: var(--color-text-muted);">
+    No articles found matching your query.
+  </div>
+</Layout>
+
+<script is:inline>
+  function setupFilter() {
+    const searchInput = document.getElementById('blog-search');
+    const postsList = document.getElementById('posts-list');
+    const noResults = document.getElementById('no-results-msg');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+
+    if (!searchInput || !postsList) return;
+
+    let activeTag = 'all';
+
+    function updatePosts() {
+      const q = searchInput.value.trim().toLowerCase();
+      const items = postsList.querySelectorAll('.post-wrapper-item');
+      let visible = 0;
+
+      items.forEach((item) => {
+        const title = item.getAttribute('data-title') || '';
+        const desc = item.getAttribute('data-desc') || '';
+        const tags = JSON.parse(item.getAttribute('data-tags') || '[]');
+
+        const matchesQuery = !q || title.includes(q) || desc.includes(q) || tags.some(t => t.toLowerCase().includes(q));
+        const matchesTag = activeTag === 'all' || tags.includes(activeTag);
+
+        if (matchesQuery && matchesTag) {
+          item.style.display = 'block';
+          visible++;
+        } else {
+          item.style.display = 'none';
+        }
+      });
+
+      if (noResults) {
+        noResults.style.display = visible === 0 ? 'block' : 'none';
+      }
+    }
+
+    searchInput.addEventListener('input', updatePosts);
+
+    filterBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => {
+          b.classList.remove('active');
+          b.classList.add('secondary');
+        });
+        btn.classList.add('active');
+        btn.classList.remove('secondary');
+        activeTag = btn.getAttribute('data-tag') || 'all';
+        updatePosts();
+      });
+    });
+  }
+
+  setupFilter();
+  document.addEventListener('astro:after-swap', setupFilter);
+</script>

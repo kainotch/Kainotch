@@ -1,0 +1,355 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Heading from '../components/Heading.astro';
+import PostItem from '../components/PostItem.astro';
+import GitHubContributionCard from '../components/GitHubContributionCard.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog');
+const sortedPosts = posts
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .slice(0, 5);
+---
+
+<Layout title="KaiNotch">
+  <header class="hero hero-index">
+    <div class="hero-wrapper">
+      <div>
+        <div class="hero-intro">
+          <h1 class="hero-title">
+            <span class="hero-greeting">Hey, I'm</span>
+            <div class="hero-title-row">
+              <div class="hero-ascii-wrapper" aria-label="KaiNotch">
+                <pre class="hero-ascii-banner">██╗  ██╗ █████╗ ██╗███╗   ██╗ ██████╗ ████████╗ ██████╗██╗  ██╗
+██║ ██╔╝██╔══██╗██║████╗  ██║██╔═══██╗╚══██╔══╝██╔════╝██║  ██║
+█████╔╝ ███████║██║██╔██╗ ██║██║   ██║   ██║   ██║     ███████║
+██╔═██╗ ██╔══██║██║██║╚██╗██║██║   ██║   ██║   ██║     ██╔══██║
+██║  ██╗██║  ██║██║██║ ╚████║╚██████╔╝   ██║   ╚██████╗██║  ██║
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝ ╚═════╝    ╚═╝    ╚═════╝╚═╝  ╚═╝</pre>
+              </div>
+              <div class="hero-companion-wrapper">
+                <img
+                  src="/assets/saitama.png"
+                  alt="Saitama pixel art"
+                  class="hero-companion-img"
+                  width="74"
+                  height="74"
+                  loading="eager"
+                />
+              </div>
+            </div>
+          </h1>
+        </div>
+        <p class="hero-description hero-tagline">
+          Software developer, creator, all-around tech nerd.
+        </p>
+
+        <Heading title="A brief timeline" small />
+
+        <ul class="hero-eras">
+          <li>
+            <span class="era-dates">2008</span>
+            <span>Spawned into the world.</span>
+          </li>
+          <li>
+            <span class="era-dates">2008&ndash;2022</span>
+            <span>
+              No idea what I was doing. Gaming, growing up, and enjoying childhood.
+            </span>
+          </li>
+          <li>
+            <span class="era-dates">2023&ndash;2025</span>
+            <span>
+              Finished school. Stumbled into computers, realized what tech and the internet really are, and fell down the rabbit hole.
+            </span>
+          </li>
+          <li>
+            <span class="era-dates">2025&ndash;2026</span>
+            <span>
+              Started building stuff: created two applications (<a href="/projects#wammy">Wammy</a> and <a href="/projects#neru">Neru</a>), dove deep into web and Android development, and learned random programming languages for no reason.
+            </span>
+          </li>
+        </ul>
+
+        <p class="hero-description">
+          <a href="/about">Also</a>: Android tinkerer, open-source explorer, webmaster.
+        </p>
+      </div>
+
+      <div class="hero-image-container has-avatar">
+        <div class="avatar-float-wrapper">
+          <a
+            href="https://github.com/KaiNotch"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="View KaiNotch on GitHub"
+            class="avatar-link"
+          >
+            <img src="/avatar.png" class="hero-image avatar-img" alt="KaiNotch GitHub Profile" />
+          </a>
+          <div class="avatar-ground-shadow" aria-hidden="true"></div>
+        </div>
+        <aside class="hero-bubble">
+          Looking for my code? Check out <a href="https://github.com/KaiNotch" target="_blank" rel="noopener noreferrer">@KaiNotch</a> on GitHub!
+        </aside>
+      </div>
+    </div>
+  </header>
+
+  <!-- Latest Posts Section -->
+  <section class="section-index">
+    <Heading title="Latest" slug="/blog" buttonText="All Posts" />
+    <div class="posts">
+      {sortedPosts.map((post) => (
+        <PostItem
+          title={post.data.title}
+          slug={post.id}
+          pubDate={post.data.pubDate}
+          tags={post.data.tags}
+          description={post.data.description}
+          icon="/assets/nav-blog.png"
+        />
+      ))}
+    </div>
+  </section>
+
+  <!-- GitHub Activity Bento Card -->
+  <section class="section-index">
+    <GitHubContributionCard />
+  </section>
+
+  <!-- Featured Projects Section -->
+  <section class="section-index">
+    <Heading
+      title="Projects"
+      slug="/projects"
+      buttonText="All Projects"
+      description="Featured applications and open-source tools I've built."
+    />
+    <div class="cards cards-half">
+      <a class="card card-highlight card-shelf" href="/projects#wammy">
+        <div class="flex-space-between">
+          <div class="card-title">Wammy</div>
+          <div class="chip">
+            <span class="chip-highlight">Android</span>
+          </div>
+        </div>
+        <p>All-in-one reader application for manga, manhwa, and light novels with built-in sources and cloud synchronization.</p>
+      </a>
+
+      <a class="card card-highlight card-shelf" href="/projects#neru">
+        <div class="flex-space-between">
+          <div class="card-title">Neru</div>
+          <div class="chip">
+            <span class="chip-highlight">Android</span>
+          </div>
+        </div>
+        <p>A privacy-focused sleep and inactivity timer for Android with audio fade-out and active app monitoring.</p>
+      </a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .hero-intro {
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-title {
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  .hero-greeting {
+    font-family: var(--font-family-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-emphasized);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  .hero-title-row {
+    display: inline-flex;
+    align-items: center;
+    gap: clamp(0.5rem, 2vw, 1.25rem);
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    margin: 0.25rem 0 0.5rem;
+  }
+
+  .hero-title-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hero-ascii-wrapper {
+    flex-shrink: 0;
+    overflow-x: visible;
+    filter: drop-shadow(0 2px 16px rgba(56, 189, 248, 0.25));
+  }
+
+  .hero-companion-wrapper {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    perspective: 800px;
+  }
+
+  .hero-companion-img {
+    display: block;
+    width: clamp(54px, 5.5vw, 76px);
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 12px rgba(56, 189, 248, 0.22));
+    animation: saitama-slow-float 5.8s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: translate3d(0, 0, 0);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
+  }
+
+  /* Gentle, very slow, silky-smooth float for Saitama */
+  @keyframes saitama-slow-float {
+    0%, 100% {
+      transform: translate3d(0, 0px, 0);
+    }
+    50% {
+      transform: translate3d(0, -7px, 0);
+    }
+  }
+
+  .hero-companion-img:hover {
+    transform: translate3d(0, -9px, 0) scale(1.08);
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.65)) drop-shadow(0 0 18px rgba(56, 189, 248, 0.5));
+  }
+
+  .hero-ascii-banner {
+    display: inline-block;
+    white-space: pre;
+    font-family: 'Google Sans Code Variable', 'JetBrains Mono', ui-monospace, monospace;
+    font-size: clamp(0.38rem, 1.1vw, 0.68rem);
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    background: linear-gradient(90deg, #ffffff 0%, #a5f3fc 20%, var(--color-primary) 50%, #c084fc 80%, #38bdf8 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: 6s linear infinite banner-shimmer;
+    user-select: none;
+    margin: 0;
+    padding: 0.2rem 0;
+  }
+
+  @keyframes banner-shimmer {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .has-avatar::before {
+    display: none !important;
+  }
+
+  .avatar-float-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 170px;
+    margin: 0 auto;
+    perspective: 1000px;
+  }
+
+  .avatar-link {
+    display: block;
+    position: relative;
+    z-index: 2;
+    border-radius: 50%;
+    transform: translate3d(0, 0, 0);
+    animation: butter-float 4.8s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    outline: none;
+  }
+
+  .avatar-img {
+    border-radius: 50% !important;
+    border: 3px solid var(--color-primary);
+    box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.5), 0 0 24px rgba(56, 189, 248, 0.3);
+    width: 170px !important;
+    max-width: 170px !important;
+    height: 170px !important;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, box-shadow 0.3s ease;
+    transform: translateZ(0);
+  }
+
+  /* Ground shadow that reacts to the floating height using pure GPU-accelerated transform & opacity */
+  .avatar-ground-shadow {
+    position: absolute;
+    bottom: -6px;
+    width: 110px;
+    height: 12px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 70%);
+    animation: shadow-breathe 4.8s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+    will-change: transform, opacity;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Harmonic Sinusoidal Floating (Zero-repaint, 100% GPU Composite) */
+  @keyframes butter-float {
+    0%, 100% {
+      transform: translate3d(0, 0px, 0);
+    }
+    50% {
+      transform: translate3d(0, -11px, 0);
+    }
+  }
+
+  @keyframes shadow-breathe {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.8;
+    }
+    50% {
+      transform: scale(0.78);
+      opacity: 0.35;
+    }
+  }
+
+  .avatar-link:hover {
+    animation-play-state: paused;
+  }
+
+  .avatar-link:hover .avatar-img {
+    transform: scale(1.05) translate3d(0, -4px, 0);
+    border-color: #a5f3fc;
+    box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.6), 0 0 32px rgba(56, 189, 248, 0.55);
+  }
+</style>

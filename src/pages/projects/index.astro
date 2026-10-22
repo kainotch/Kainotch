@@ -1,0 +1,414 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+// Fetch live GitHub stars at build time with fail-safe fallback to current real values
+let wammyStars = 9;
+let neruStars = 0;
+let webStars = 1;
+
+try {
+  const [resWammy, resNeru, resWeb] = await Promise.all([
+    fetch('https://api.github.com/repos/kainotch/Wammy', { headers: { 'User-Agent': 'KaiNotch' } }),
+    fetch('https://api.github.com/repos/kainotch/Neru', { headers: { 'User-Agent': 'KaiNotch' } }),
+    fetch('https://api.github.com/repos/kainotch/Kainotch', { headers: { 'User-Agent': 'KaiNotch' } })
+  ]);
+  if (resWammy.ok) {
+    const data = await resWammy.json();
+    if (typeof data.stargazers_count === 'number') wammyStars = data.stargazers_count;
+  }
+  if (resNeru.ok) {
+    const data = await resNeru.json();
+    if (typeof data.stargazers_count === 'number') neruStars = data.stargazers_count;
+  }
+  if (resWeb.ok) {
+    const data = await resWeb.json();
+    if (typeof data.stargazers_count === 'number') webStars = data.stargazers_count;
+  }
+} catch (e) {
+  // Silent fallback to exact verified star counts (9, 0, 1)
+}
+
+const projects = [
+  {
+    name: 'Wammy',
+    repo: 'kainotch/Wammy',
+    subtitle: 'Manga, Manhwa & Light Novel Reader for Android',
+    id: 'wammy',
+    date: '2025–2026',
+    description: 'A modern, high-performance, open-source manga, manhwa, and light novel reader for Android with a clean Material 3 design. Built with Jetpack Compose, featuring native built-in sources, Mihon APK extensions, and LNReader plugin support.',
+    github: 'https://github.com/kainotch/Wammy',
+    logo: '/assets/wammy_logo.png',
+    tags: ['Android', 'Kotlin', 'Jetpack Compose', 'Material 3', 'Manga Reader'],
+    stars: wammyStars
+  },
+  {
+    name: 'Neru (ねる)',
+    repo: 'kainotch/Neru',
+    subtitle: 'Sleep & Inactivity Timer for Android',
+    id: 'neru',
+    date: '2025–2026',
+    description: 'A privacy-focused sleep and inactivity timer for Android. Tracks foreground media and social apps, automatically turns off your device screen, and gradually fades out audio volume when you fall asleep. 100% offline and open-source.',
+    github: 'https://github.com/kainotch/Neru',
+    logo: '/assets/neru_logo.png',
+    tags: ['Android', 'Kotlin', 'Sleep Timer', 'Privacy', 'Open Source'],
+    stars: neruStars
+  },
+  {
+    name: 'KaiNotch',
+    repo: 'kainotch/Kainotch',
+    subtitle: 'Personal Digital Garden & Portfolio',
+    id: 'kainotch',
+    date: '2026',
+    description: 'The source code of this personal digital garden and portfolio, built with Astro, TypeScript, and modern CSS featuring live interactive ASCII matrix animations and theme switching.',
+    github: 'https://github.com/kainotch/Kainotch',
+    logo: '/avatar.png',
+    tags: ['Astro', 'TypeScript', 'CSS', 'Digital Garden'],
+    stars: webStars
+  }
+];
+---
+
+<Layout title="Projects" description="Open-source applications and projects built by KaiNotch.">
+  <header class="hero hero-page" style="margin-bottom: 2.5rem;">
+    <h1 class="flex-align-center large-gap">
+      <img src="/assets/nav-projects.png" alt="" width="32" height="32" />
+      Projects
+    </h1>
+    <div class="hero-description">
+      A collection of open-source applications, tools, and libraries I've built and maintained.
+    </div>
+  </header>
+
+  <div class="projects-container">
+    {projects.map((project) => (
+      <article class="project-card" id={project.id}>
+        <div class="project-logo-col">
+          <a href={project.github} target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
+            <img
+              src={project.logo}
+              alt={`${project.name} logo`}
+              class="project-logo-img"
+              width="80"
+              height="80"
+              loading="lazy"
+            />
+          </a>
+        </div>
+
+        <div class="project-content-col">
+          <div class="project-top-row">
+            <div class="project-title-area">
+              <h2 class="project-title">
+                <a href={project.github} target="_blank" rel="noopener noreferrer">
+                  {project.name}
+                </a>
+              </h2>
+              {project.subtitle && <span class="project-subtitle">{project.subtitle}</span>}
+            </div>
+
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="project-stars-pill"
+              title={`${project.stars} stars on GitHub`}
+              aria-label={`${project.stars} stars on GitHub`}
+            >
+              <svg class="star-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+              </svg>
+              <span class="star-num" data-repo={project.repo}>{project.stars}</span>
+            </a>
+          </div>
+
+          <p class="project-description">
+            {project.description}
+          </p>
+
+          <div class="project-bottom-row">
+            <div class="project-tags">
+              {project.tags.map((tag) => (
+                <span class="tag">{tag}</span>
+              ))}
+            </div>
+
+            <div class="project-actions">
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="github-source-btn"
+                title="View Source on GitHub"
+                aria-label="View Source on GitHub"
+              >
+                <img
+                  src="/assets/nav-github.png"
+                  alt=""
+                  class="github-btn-icon"
+                  width="20"
+                  height="20"
+                  loading="lazy"
+                />
+                <span>Source</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+    ))}
+  </div>
+
+  <script>
+    // Live GitHub stars updater: fetches live star count directly in the browser
+    async function refreshLiveStars() {
+      const starEls = document.querySelectorAll<HTMLElement>('[data-repo]');
+      starEls.forEach(async (el) => {
+        const repo = el.getAttribute('data-repo');
+        if (!repo) return;
+        try {
+          const res = await fetch(`https://api.github.com/repos/${repo}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (typeof data.stargazers_count === 'number') {
+              el.textContent = String(data.stargazers_count);
+            }
+          }
+        } catch (e) {
+          // Keep pre-rendered build-time count
+        }
+      });
+    }
+
+    refreshLiveStars();
+    document.addEventListener('astro:after-swap', refreshLiveStars);
+  </script>
+</Layout>
+
+<style>
+  .projects-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    margin-bottom: 3rem;
+  }
+
+  .project-card {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: rgba(18, 19, 26, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 16px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: border-color 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    width: 100%;
+  }
+
+  .project-card:hover {
+    border-color: rgba(56, 189, 248, 0.45);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4), 0 0 20px rgba(56, 189, 248, 0.1);
+  }
+
+  .project-logo-col {
+    flex-shrink: 0;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .project-logo-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 18px;
+    object-fit: cover;
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    background: #14151c;
+    display: block;
+    transition: transform 0.25s ease, border-color 0.25s ease;
+  }
+
+  .project-card:hover .project-logo-img {
+    transform: scale(1.03);
+    border-color: var(--color-primary);
+  }
+
+  .project-content-col {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .project-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .project-title-area {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .project-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+    border: none;
+    line-height: 1.25;
+  }
+
+  .project-title a {
+    color: var(--color-text-emphasized);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .project-title a:hover {
+    color: var(--color-primary);
+  }
+
+  .project-subtitle {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+    font-family: var(--font-family-monospace2);
+  }
+
+  .project-stars-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(255, 215, 0, 0.08);
+    border: 1px solid rgba(255, 215, 0, 0.25);
+    color: #ffd700;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .project-stars-pill:hover {
+    background: rgba(255, 215, 0, 0.16);
+    border-color: rgba(255, 215, 0, 0.5);
+    transform: scale(1.04);
+  }
+
+  .star-icon {
+    display: block;
+  }
+
+  .star-num {
+    line-height: 1;
+  }
+
+  .project-description {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .project-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .project-tags {
+    display: flex;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .project-actions {
+    margin-left: auto;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .github-source-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1;
+    border-radius: 9px;
+    background: rgba(18, 19, 26, 0.6);
+    border: 1.5px solid var(--color-primary);
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .github-btn-icon {
+    display: block;
+    width: 20px;
+    height: 20px;
+    image-rendering: pixelated;
+    image-rendering: -webkit-optimize-contrast;
+  }
+
+  .github-source-btn:hover {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #0b0c10;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(56, 189, 248, 0.35);
+  }
+
+  .github-source-btn:active {
+    transform: translateY(0);
+  }
+
+  @media screen and (max-width: 640px) {
+    .project-card {
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1.25rem;
+    }
+
+    .project-logo-img {
+      width: 64px;
+      height: 64px;
+      border-radius: 14px;
+    }
+
+    .project-bottom-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.85rem;
+    }
+
+    .project-actions {
+      margin-left: 0;
+      width: 100%;
+    }
+
+    .github-source-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>

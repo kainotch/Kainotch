@@ -1,0 +1,548 @@
+---
+import ColorDropdown from './ColorDropdown.astro';
+import ThemeToggle from './ThemeToggle.astro';
+
+const pathname = Astro.url.pathname;
+---
+
+<aside class="sidebar">
+  <!-- Top section with video background (from top of sidebar down to About me button) -->
+  <div class="sidebar-top-wrapper">
+    <div class="sidebar-bg-video-container">
+      <video
+        autoplay
+        loop
+        muted
+        playsinline
+        class="sidebar-bg-video"
+        id="sidebar-bg-video"
+      >
+        <source src="/background.mp4" type="video/mp4" />
+      </video>
+      <div class="sidebar-bg-overlay"></div>
+    </div>
+
+    <!-- Top info content aligned to the right inside the video area -->
+    <div class="sidebar-top-inner">
+      <section class="sidebar-section">
+        <div class="sidebar-title-link">
+          <a href="/" class="flex-align-center gap">
+            <span>
+              <img
+                src="/avatar.png"
+                class="navbar-logo"
+                style="border-radius: 50%; object-fit: cover; border: 1.5px solid var(--color-primary);"
+                alt="kainotch"
+                height="20"
+                width="20"
+              />
+            </span>
+            <span class="site-name">kainotch</span>
+          </a>
+          <div class="flex-align-center">
+            <ColorDropdown />
+            <ThemeToggle />
+          </div>
+        </div>
+      </section>
+
+      <section class="sidebar-section">
+        <div class="sidebar-content">
+          <p>
+            I'm <a href="/about">KaiNotch</a>, software developer and creator.
+            This is my digital garden.
+          </p>
+        </div>
+      </section>
+
+      <section class="sidebar-section sidebar-nav-section">
+        <nav class="sidebar-nav-links">
+          <a href="/blog" class={pathname.startsWith('/blog') ? 'active' : ''}>
+            <img src="/assets/nav-blog.png" alt="" />
+            Blog
+          </a>
+          <a href="/shelves" class={pathname.startsWith('/shelves') ? 'active' : ''}>
+            <img src="/assets/nav-search.png" alt="" />
+            Shelves
+          </a>
+          <a href="/projects" class={pathname.startsWith('/projects') ? 'active' : ''}>
+            <img src="/assets/nav-projects.png" alt="" />
+            Projects
+          </a>
+          <a href="/about" class={pathname.startsWith('/about') ? 'active' : ''}>
+            <img src="/assets/nav-floppy.png" alt="" />
+            About me
+          </a>
+        </nav>
+      </section>
+
+      <!-- Pokemon Pixelated Game Theme Volume Bar -->
+      <div class="pokemon-volume-container">
+        <div class="poke-vol-card" id="poke-vol-card">
+          <div class="poke-vol-top">
+            <button
+              type="button"
+              class="poke-ball-btn"
+              id="poke-mute-toggle"
+              title="Click Pokeball to Mute / Unmute"
+              aria-label="Toggle audio"
+            >
+              <svg class="poke-ball-svg" viewBox="0 0 16 16" width="16" height="16">
+                <circle cx="8" cy="8" r="7" fill="#181920" stroke="#000" stroke-width="1.5" />
+                <path d="M1 8 A7 7 0 0 1 15 8 Z" fill="#ef4444" />
+                <path d="M1 8 A7 7 0 0 0 15 8 Z" fill="#f8fafc" />
+                <line x1="1" y1="8" x2="15" y2="8" stroke="#000" stroke-width="1.8" />
+                <circle cx="8" cy="8" r="2.8" fill="#f8fafc" stroke="#000" stroke-width="1.5" />
+                <circle cx="8" cy="8" r="1.1" fill="#000" />
+              </svg>
+            </button>
+            <div class="poke-badge-wrapper">
+              <span class="poke-hp-badge">VOL</span>
+            </div>
+            <span class="poke-status-text" id="poke-vol-display">MUTED</span>
+          </div>
+
+          <div
+            class="poke-bar-outer"
+            id="poke-bar-outer"
+            role="slider"
+            aria-label="Video volume"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="0"
+            tabindex="0"
+            title="Click or drag to change volume"
+          >
+            <div class="poke-bar-fill" id="poke-bar-fill" style="width: 0%;"></div>
+            <div class="poke-bar-ticks">
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom section with clean dark background (no video) -->
+  <div class="sidebar-bottom-wrapper">
+    <div class="sidebar-bottom-inner">
+      <div class="sidebar-bottom">
+        <section class="sidebar-section">
+          <nav class="sidebar-links">
+            <div class="tooltip-container tooltip-above">
+              <a href="mailto:kainotch@gmail.com" aria-label="Email">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L1 7"></path>
+                </svg>
+              </a>
+              <div class="tooltip">Email</div>
+            </div>
+
+            <div class="tooltip-container tooltip-above">
+              <a href="https://github.com/KaiNotch" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                </svg>
+              </a>
+              <div class="tooltip">GitHub</div>
+            </div>
+
+            <div class="tooltip-container tooltip-above">
+              <a href="https://instagram.com/kainotch" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+              </a>
+              <div class="tooltip">Instagram</div>
+            </div>
+
+            <div class="tooltip-container tooltip-above">
+              <a href="/rss.xml" aria-label="RSS feed">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 11a9 9 0 0 1 9 9"></path>
+                  <path d="M4 4a16 16 0 0 1 16 16"></path>
+                  <circle cx="5" cy="19" r="1"></circle>
+                </svg>
+              </a>
+              <div class="tooltip">RSS Feed</div>
+            </div>
+          </nav>
+        </section>
+
+        <nav class="sidebar-sub-links">
+          <a href="/about">Resume</a>
+          <div class="divider"></div>
+          <a href="/blog">Topics</a>
+          <div class="divider"></div>
+          <a href="https://github.com/KaiNotch" target="_blank" rel="noopener noreferrer">Source</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<style>
+  .sidebar {
+    display: none;
+  }
+
+  @media screen and (min-width: 1020px) {
+    .sidebar {
+      position: sticky !important;
+      top: 0 !important;
+      height: 100vh !important;
+      min-height: 100vh !important;
+      max-height: 100vh !important;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background: #0d0e12 !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  }
+
+  /* The top section holding the video background from top down to About me button */
+  .sidebar-top-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .sidebar-bg-video-container {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .sidebar-bg-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center 25% !important;
+    display: block;
+  }
+
+  .sidebar-bg-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    /* Dark translucent overlay so manga video animation is clearly visible while text & links are super sharp */
+    background: linear-gradient(
+      180deg,
+      rgba(10, 11, 16, 0.70) 0%,
+      rgba(10, 11, 16, 0.60) 65%,
+      rgba(10, 11, 16, 0.92) 100%
+    );
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+
+  /* The top content aligned to the right inside the video area */
+  .sidebar-top-inner {
+    position: relative;
+    z-index: 1;
+    width: 275px;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: 1.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .sidebar-nav-section {
+    border-bottom: none !important;
+    margin-bottom: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  /* The bottom section with clean dark background matching the upper theme */
+  .sidebar-bottom-wrapper {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    background: #0d0e12 !important;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .sidebar-bottom-inner {
+    width: 275px;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: 1.5rem;
+    padding-bottom: 1.5rem;
+    padding-top: 1rem;
+    background: #0d0e12 !important;
+  }
+
+  /* Pokemon Pixelated Volume Controller Styles */
+  .pokemon-volume-container {
+    margin-top: 0.85rem;
+    padding-bottom: 0.25rem;
+    width: 100%;
+  }
+
+  .poke-vol-card {
+    background: rgba(18, 20, 28, 0.88);
+    border: 2px solid #000;
+    border-radius: 6px;
+    box-shadow:
+      inset 1px 1px 0 rgba(255, 255, 255, 0.18),
+      inset -1px -1px 0 rgba(0, 0, 0, 0.6),
+      0 3px 8px rgba(0, 0, 0, 0.4);
+    padding: 0.5rem 0.65rem 0.55rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .poke-vol-top {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .poke-ball-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: transform 0.15s ease, filter 0.15s ease;
+    line-height: 1;
+  }
+
+  .poke-ball-btn:hover {
+    transform: scale(1.15) rotate(15deg);
+    filter: drop-shadow(0 0 6px #ef4444);
+  }
+
+  .poke-ball-btn.is-active .poke-ball-svg {
+    filter: drop-shadow(0 0 5px rgba(239, 68, 68, 0.7));
+    animation: pokeball-wobble 2s infinite ease-in-out;
+  }
+
+  @keyframes pokeball-wobble {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-8deg); }
+    75% { transform: rotate(8deg); }
+  }
+
+  .poke-hp-badge {
+    display: inline-block;
+    background: #f59e0b;
+    color: #000;
+    font-family: var(--font-family-monospace);
+    font-size: 0.62rem;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    padding: 1px 4px;
+    border-radius: 2px;
+    border: 1px solid #78350f;
+    line-height: 1.1;
+  }
+
+  .poke-status-text {
+    font-family: var(--font-family-monospace);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin-left: auto;
+    letter-spacing: 0.5px;
+  }
+
+  .poke-bar-outer {
+    position: relative;
+    width: 100%;
+    height: 12px;
+    background: #0f1117;
+    border: 2px solid #000;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.7);
+  }
+
+  .poke-bar-fill {
+    height: 100%;
+    width: 0%;
+    transition: width 0.08s ease, background 0.15s ease;
+    background: #22c55e;
+    box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.35), inset 0 -2px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  /* Stepped colors matching Pokemon HP bar */
+  .poke-bar-fill.fill-green {
+    background: linear-gradient(180deg, #4ade80 0%, #22c55e 50%, #16a34a 100%);
+  }
+
+  .poke-bar-fill.fill-yellow {
+    background: linear-gradient(180deg, #fef08a 0%, #eab308 50%, #ca8a04 100%);
+  }
+
+  .poke-bar-fill.fill-red {
+    background: linear-gradient(180deg, #fca5a5 0%, #ef4444 50%, #dc2626 100%);
+  }
+
+  /* Tick marks for retro segmented feel */
+  .poke-bar-ticks {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    padding: 0 10%;
+  }
+
+  .poke-bar-ticks span {
+    width: 1px;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.35);
+  }
+</style>
+
+<script>
+  (function initPokemonVolume() {
+    function setupVolume() {
+      const video = document.getElementById('sidebar-bg-video') as HTMLVideoElement | null;
+      const barOuter = document.getElementById('poke-bar-outer');
+      const barFill = document.getElementById('poke-bar-fill');
+      const volDisplay = document.getElementById('poke-vol-display');
+      const muteBtn = document.getElementById('poke-mute-toggle');
+      if (!video || !barOuter || !barFill || !volDisplay || !muteBtn) return;
+
+      let savedVol = parseFloat(localStorage.getItem('kainotch-video-vol') || '0.5');
+      let isDragging = false;
+
+      function updateUI(vol: number) {
+        const percent = Math.round(vol * 100);
+        barFill.style.width = `${percent}%`;
+
+        // Pokemon HP bar color logic
+        barFill.classList.remove('fill-green', 'fill-yellow', 'fill-red');
+        if (percent > 50) {
+          barFill.classList.add('fill-green');
+        } else if (percent > 20) {
+          barFill.classList.add('fill-yellow');
+        } else if (percent > 0) {
+          barFill.classList.add('fill-red');
+        }
+
+        if (vol <= 0 || video.muted) {
+          volDisplay.textContent = 'MUTED';
+          volDisplay.style.color = '#94a3b8';
+          muteBtn.classList.remove('is-active');
+        } else {
+          volDisplay.textContent = `${percent}%`;
+          volDisplay.style.color = '#38bdf8';
+          muteBtn.classList.add('is-active');
+        }
+      }
+
+      function setVolume(val: number) {
+        val = Math.max(0, Math.min(1, val));
+        video.volume = val;
+        if (val > 0) {
+          video.muted = false;
+          savedVol = val;
+          // Ensure video plays with audio
+          video.play().catch(() => {});
+        } else {
+          video.muted = true;
+        }
+        localStorage.setItem('kainotch-video-vol', String(savedVol));
+        updateUI(video.muted ? 0 : val);
+      }
+
+      function calculateValFromEvent(e: MouseEvent | TouchEvent) {
+        const rect = barOuter.getBoundingClientRect();
+        const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+        const clickX = clientX - rect.left;
+        return clickX / rect.width;
+      }
+
+      barOuter.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        setVolume(calculateValFromEvent(e));
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        setVolume(calculateValFromEvent(e));
+      });
+
+      window.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+
+      // Touch support
+      barOuter.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        setVolume(calculateValFromEvent(e));
+      }, { passive: true });
+
+      window.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        setVolume(calculateValFromEvent(e));
+      }, { passive: true });
+
+      window.addEventListener('touchend', () => {
+        isDragging = false;
+      });
+
+      // Pokeball toggle mute / unmute
+      muteBtn.addEventListener('click', () => {
+        if (video.muted || video.volume === 0) {
+          const restore = savedVol > 0 ? savedVol : 0.5;
+          setVolume(restore);
+        } else {
+          savedVol = video.volume > 0 ? video.volume : savedVol;
+          setVolume(0);
+        }
+      });
+
+      // Keyboard arrow keys accessibility
+      barOuter.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          setVolume((video.muted ? 0 : video.volume) + 0.1);
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          setVolume((video.muted ? 0 : video.volume) - 0.1);
+        }
+      });
+
+      // Initial state is MUTED so browser autoplay policy is respected
+      video.muted = true;
+      video.volume = 0;
+      updateUI(0);
+    }
+
+    setupVolume();
+    document.addEventListener('astro:after-swap', setupVolume);
+  })();
+</script>
